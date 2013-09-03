@@ -21,27 +21,32 @@ Status byte is 0x77, as it should be.
 BIT data is 7f7f7f7f7f7f, as it should be.
 Extended BIT fails:
 
-  FPGA data output passed
-  FPGA data acquisition passed
-  Accel A passed
-  Accel B passed
-  Accel C passed
-  ADC passed
-  Aux SPORT failed!
-  High speed SPORT passed
-  GCB passed
-  SELFTEST failed!
+	FPGA data output passed
+	FPGA data acquisition passed
+	Accel A passed
+	Accel B passed
+	Accel C passed
+	ADC passed
+	Aux SPORT failed!
+	High speed SPORT passed
+	GCB passed
+	SELFTEST failed!
 
 
-  CFG>INVALID,=DOFMT,0,EO0,1,@
+	CFG>INVALID,=DOFMT,0,EO0,1,@
 
-  CFG>INVALID,=DOFMT,1,EO1,1,@
+	CFG>INVALID,=DOFMT,1,EO1,1,@
 
-  CFG>INVALID,=DOFMT,2,EO2,1,@
+	CFG>INVALID,=DOFMT,2,EO2,1,@
 
-  CFG>INVALID,=PROMPTS,1
+	CFG>INVALID,=PROMPTS,1
 
-  CFG>
+	CFG>
 
 
 not a buffer overflow issue because checking serial line for new packets at 1250 Hz
+
+<!--
+vim: ft=markdown
+-->
+
