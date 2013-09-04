@@ -1,3 +1,7 @@
+# KVH 1750 Troubleshooting
+
+## Test setup and procedure
+
 I am using [this Python test script](https://github.com/osudrl/atrias/blob/374b7dde6a13065d6b9810f221f51f5b39029d9b/software/atrias/scripts/kvh_ahrs_test.py)
 to troubleshoot the KVH 1750 IMU in six different modes:
 
@@ -23,6 +27,8 @@ IMU's base. In all six modes, I:
   3. Rotate IMU back and forth about X axis, rotating faster in one direction
      than in the other (staying within gyro bandwidth), then rotate back to
      beginning position.
+
+## Results
 
 For each of the six modes, these are the output logs of the test script and my
 observations:
