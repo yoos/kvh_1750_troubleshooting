@@ -1,4 +1,4 @@
-I am using [this Python test script](https://github.com/osudrl/atrias/blob/374b7dde6a13065d6b9810f221f51f5b39029d9b/software/atrias/scripts/kvh_ahrs_test.py) to troubleshoot the KVH 1750 IMU in four different modes:
+I am using [this Python test script](https://github.com/osudrl/atrias/blob/374b7dde6a13065d6b9810f221f51f5b39029d9b/software/atrias/scripts/kvh_ahrs_test.py) to troubleshoot the KVH 1750 IMU in six different modes:
 
   1. Direct connection to IMU, 1000 Hz, internal MSync, delta angle
   2. Direct connection to IMU, 1000 Hz, internal MSync, rate
@@ -18,7 +18,7 @@ IMU's base. In all six modes, I:
   3. Rotate IMU -180 degrees about X axis
   4. Hold for a few seconds
   5. Rotate IMU back and forth about X axis, rotating faster in one direction
-     than in the other.
+     than in the other (staying within gyro bandwidth).
   6. Rotate IMU back to beginning position.
 
 For each of the six modes, I can observe the following:
@@ -39,45 +39,48 @@ For each of the six modes, I can observe the following:
   6. Logfile: [kvh\_medulla\_ext\_rate.log](kvh_medulla_ext_rate.log)
     * Numbers make sense.
 
-scale factor error 1.039 in 1 and 2 (using marks on the tabletop to rotate the IMU 180 degrees)
-nonsensically large numbers in 3
-no scale factor error in 4
+For 1 and 2, I scoped the TOV output and found they were pulsing at 962.4 Hz
+instead of the expected 1000 Hz. Note that 1000/962.4 = 180/173 = 1.039.
 
-Scoped TOV output -- 962.4 Hz instead of the expected 1000 Hz. Note that 1000/962.4 = 1.039.
-IMU internal timer is off maybe?
-changing data rate does not help.
-lowering baudrate (and the data rate, appropriately) does not help.
-Y and Z axes seem to behave similarly.
-tried spinning fast in one direction, slowly in the other. Zeroes properly. (Of course stayed within gyro bandwidth.)
-Sequence bytes look good.
-Status byte is 0x77, as it should be.
-BIT data is 7f7f7f7f7f7f, as it should be.
-Extended BIT fails:
+The following do not affect the results above:
 
-	FPGA data output passed
-	FPGA data acquisition passed
-	Accel A passed
-	Accel B passed
-	Accel C passed
-	ADC passed
-	Aux SPORT failed!
-	High speed SPORT passed
-	GCB passed
-	SELFTEST failed!
+  * Changing data rate all the way down to 1 Hz
+  * Lowering baudrate down to 115200 baud
+  * Using the Y and Z axes
 
+In addition, the sequence bytes look good. The status byte is always `0x77`, as
+shown in the log files. BIT data is `7f7f7f7f7f7f`, as it should be.
 
-	CFG>INVALID,=DOFMT,0,EO0,1,@
+However, extended BIT fails and returns the following:
 
-	CFG>INVALID,=DOFMT,1,EO1,1,@
-
-	CFG>INVALID,=DOFMT,2,EO2,1,@
-
-	CFG>INVALID,=PROMPTS,1
-
-	CFG>
+    FPGA data output passed
+    FPGA data acquisition passed
+    Accel A passed
+    Accel B passed
+    Accel C passed
+    ADC passed
+    Aux SPORT failed!
+    High speed SPORT passed
+    GCB passed
+    SELFTEST failed!
 
 
-not a buffer overflow issue because checking serial line for new packets at 1250 Hz
+    CFG>INVALID,=DOFMT,0,EO0,1,@
+
+    CFG>INVALID,=DOFMT,1,EO1,1,@
+
+    CFG>INVALID,=DOFMT,2,EO2,1,@
+
+    CFG>INVALID,=PROMPTS,1
+
+    CFG>
+
+This leaves me with two questions:
+
+  1. Why is there a scale factor error of 1.039 for both rate and delta angle
+     modes when MSync is internal?
+  2. Why do the numbers make no sense in delta angle mode when MSync is
+     external?
 
 <!--
 vim: ft=markdown
